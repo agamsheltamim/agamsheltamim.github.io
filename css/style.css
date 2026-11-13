@@ -892,3 +892,18 @@ html.a11y-contrast .mq-b{color:#fff;-webkit-text-stroke:0}
 @media (min-width:900px){.slide-ui{left:104px}.hero-v3 .scroll-cue{right:max(104px,5.5vw)}}
 img{height:auto}
 .about-card img{height:auto;width:100%;object-fit:cover}
+
+/* ==========================================================
+   ביצועים – גלילה חלקה יותר
+   (בלי טשטוש רקע ובלי מצבי מיזוג, שמכבידים על כל פריים בזמן גלילה)
+   ========================================================== */
+.site-header,.site-header.scrolled,.site-header.solid{backdrop-filter:none;-webkit-backdrop-filter:none}
+.site-header.scrolled,.site-header.solid{background:rgba(23,12,7,.95)}
+@media (max-width:980px){.site-header{background:rgba(23,12,7,.95);backdrop-filter:none}}
+.step,.hero-kicker,.slide-toggle,.intro-skip{backdrop-filter:none;-webkit-backdrop-filter:none}
+.hero::before,.hero.hero-v3::before{mix-blend-mode:normal;opacity:.18}
+.intro-grain{mix-blend-mode:normal;opacity:.12}
+.lightbox::backdrop{backdrop-filter:none}
+.deco{filter:none}
+.hs-track,.slides,.mq-row,.bigshot-frame img,.panel{backface-visibility:hidden}
+#galleryGrid .tile{contain:paint}

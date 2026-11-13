@@ -107,14 +107,16 @@
     scrollAnimsOn = true;
     gsap.registerPlugin(ScrollTrigger);
     gsap.ticker.lagSmoothing(0);
+    ScrollTrigger.config({ ignoreMobileResize: true });
+    var touch = window.matchMedia('(pointer: coarse)').matches, SC = touch ? .5 : true;
     var desktop = window.matchMedia('(min-width: 900px)').matches;
 
     /* פס התקדמות */
-    gsap.to('.scroll-progress', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: .3 } });
+    gsap.to('.scroll-progress', { scaleX: 1, ease: 'none', scrollTrigger: { start: 0, end: 'max', scrub: SC } });
 
     /* גלילה חלקה */
     if (window.Lenis && !lenis) {
-      lenis = new Lenis({ duration: 1.15, smoothWheel: true });
+      lenis = new Lenis({ lerp: .085, smoothWheel: true, wheelMultiplier: .95 });
       lenis.on('scroll', ScrollTrigger.update);
       lenisTick = function (t) { lenis.raf(t * 1000); };
       gsap.ticker.add(lenisTick);
@@ -132,7 +134,7 @@
     $$('.mq-row').forEach(function (row, i) {
       var sp = row.firstElementChild;
       if (!row.dataset.dup) { row.dataset.dup = '1'; for (var k = 0; k < 3; k++) row.appendChild(sp.cloneNode(true)); }
-      gsap.fromTo(row, { xPercent: i ? 0 : 55 }, { xPercent: i ? 55 : 0, ease: 'none', scrollTrigger: { trigger: '.marquee', start: 'top bottom', end: 'bottom top', scrub: .6 } });
+      gsap.fromTo(row, { xPercent: i ? 0 : 55 }, { xPercent: i ? 55 : 0, ease: 'none', scrollTrigger: { trigger: '.marquee', start: 'top bottom', end: 'bottom top', scrub: SC } });
     });
 
     /* אודות */
@@ -144,8 +146,8 @@
 
     /* מסך "הטעם שלא תשכחו" – ננעץ ונבנה תוך כדי גלילה */
     if ($('.statement')) {
-      var st = gsap.timeline({ scrollTrigger: { trigger: '.statement', start: 'top top', end: '+=150%', pin: true, scrub: .8, anticipatePin: 1 } });
-      st.from('.statement .sw', { opacity: .06, yPercent: 60, scale: 1.5, rotate: -6, filter: 'blur(14px)', duration: 1, stagger: .8, ease: 'power3.out' })
+      var st = gsap.timeline({ scrollTrigger: { trigger: '.statement', start: 'top top', end: '+=150%', pin: true, scrub: SC, anticipatePin: 1 } });
+      st.from('.statement .sw', { opacity: .06, yPercent: 60, scale: 1.5, rotate: -6, duration: 1, stagger: .8, ease: 'power3.out' })
         .from('.statement-sub', { opacity: 0, y: 30, duration: .8 }, '-=.2')
         .to('.statement-text', { scale: 1.06, duration: 1, ease: 'none' }, '-=.4');
       var dur = st.duration();
@@ -162,7 +164,7 @@
         $('#hs').removeAttribute('tabindex');
         var dist = function () { return Math.max(0, track.scrollWidth - window.innerWidth); };
         hsTween = gsap.to(track, { x: dist, ease: 'none',
-          scrollTrigger: { trigger: show, start: 'top top', end: function () { return '+=' + dist(); }, pin: true, scrub: .7, invalidateOnRefresh: true, anticipatePin: 1 } });
+          scrollTrigger: { trigger: show, start: 'top top', end: function () { return '+=' + dist(); }, pin: true, scrub: SC, invalidateOnRefresh: true, anticipatePin: 1 } });
         $$('.panel', track).forEach(function (pn, i) {
           gsap.from(pn, { yPercent: i % 2 ? 14 : -10, rotate: i % 2 ? 3 : -3, ease: 'none',
             scrollTrigger: { containerAnimation: hsTween, trigger: pn, start: 'right left', end: 'left 55%', scrub: true } });
@@ -184,7 +186,7 @@
 
     /* תמונה שנפתחת בקשת למסך מלא */
     if ($('.bigshot')) {
-      var bt = gsap.timeline({ scrollTrigger: { trigger: '.bigshot', start: 'top top', end: '+=130%', pin: true, scrub: .8, anticipatePin: 1 } });
+      var bt = gsap.timeline({ scrollTrigger: { trigger: '.bigshot', start: 'top top', end: '+=130%', pin: true, scrub: SC, anticipatePin: 1 } });
       bt.fromTo('.bigshot-frame', { clipPath: desktop ? 'inset(14% 32% 14% 32% round 400px 400px 30px 30px)' : 'inset(20% 14% 20% 14% round 300px 300px 24px 24px)' },
           { clipPath: 'inset(0% 0% 0% 0% round 0px 0px 0px 0px)', ease: 'power1.inOut', duration: 1 })
         .fromTo('.bigshot-frame img', { scale: 1.4 }, { scale: 1, ease: 'none', duration: 1.3 }, 0)
@@ -194,7 +196,7 @@
     /* עיטורים מרחפים בפרלקסה */
     $$('.section > .deco').forEach(function (d) {
       gsap.to(d, { y: function () { return parseFloat(d.dataset.speed) * 260; }, rotate: parseFloat(d.dataset.rot), ease: 'none',
-        scrollTrigger: { trigger: d.parentNode, start: 'top bottom', end: 'bottom top', scrub: 1 } });
+        scrollTrigger: { trigger: d.parentNode, start: 'top bottom', end: 'bottom top', scrub: SC } });
     });
 
     /* כותרות: מילה-מילה */
@@ -208,7 +210,7 @@
     });
 
     /* איך מזמינים */
-    if ($('.steps-line')) gsap.from('.steps-line', { scaleX: 0, ease: 'none', scrollTrigger: { trigger: '.steps-wrap', start: 'top 80%', end: 'top 30%', scrub: .6 } });
+    if ($('.steps-line')) gsap.from('.steps-line', { scaleX: 0, ease: 'none', scrollTrigger: { trigger: '.steps-wrap', start: 'top 80%', end: 'top 30%', scrub: SC } });
     if ($('.drip')) gsap.from('.drip', { scaleY: .15, transformOrigin: 'top', ease: 'none', scrollTrigger: { trigger: '.how', start: 'top 95%', end: 'top 35%', scrub: true } });
 
     /* גלריה: חשיפה בווילון + תנועה פנימית */
@@ -431,5 +433,9 @@
   }
 
   playIntro();
-  window.addEventListener('load', function () { if (window.ScrollTrigger && scrollAnimsOn) ScrollTrigger.refresh(); });
+  window.addEventListener('load', function () {
+    if (window.ScrollTrigger && scrollAnimsOn) ScrollTrigger.refresh();
+    /* טעינה מוקדמת של תמונות הפתיח כדי שהמעבר ביניהן לא ייתקע */
+    $$('.hero-media .slide img').forEach(function (im) { im.loading = 'eager'; if (im.decode) im.decode().catch(function () {}); });
+  });
 })();
